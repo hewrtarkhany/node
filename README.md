@@ -7,8 +7,8 @@ using Nodejs to build an app, by creating a server in command line rather than w
 #### Code Structure:
 
 #### How to Run:
-- Clone the git repository to your local folder
-- https://github.com/hewrtarkhany/node.git
+- Clone the git repository to your local folder using the command below.
+- git clone https://github.com/hewrtarkhany/node.git
 
 
 
