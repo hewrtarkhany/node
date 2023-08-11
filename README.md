@@ -1,6 +1,8 @@
 # Project Owner and Developer
 Dark Arch
 
+# Project Manager and Designer
+KC Cardona
 # Project Title
 NodeJs learning project
 
