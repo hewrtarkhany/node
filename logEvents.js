@@ -1,69 +1,37 @@
+const {format} = require('date-fns');
+const {v4: uuid } = require('uuid');
+const path = require('path');
+fily= path.join(__dirname, 'love.txt'),
+fil= path.join(__dirname, 'love2.txt');
 
-const http = require('http')
-const fs = require('fs')
-const path = require('path')
-const fsPromises = require('fs').promises
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 
+const logEvents = async (message) => {
+    // CREATING A DATE TIME
 
+    const dateTime = `${format( new Date (), 'yyyyMMdd\tHH:mm:ss')}`;
+    // PUTTING date time uuid and the message in one line 
+    // const logItem = `${dateTime}\t ${uuid()}\t${message}\n`;
 
-const logEvents = require ('./logEevents');
+    const ws = fs.createReadStream(fily,{encoding: `utf-8`})
+    const rs = fs.createWriteStream(fil)
+    const logItem = `${ws.pipe(rs).toString()}\t ${dateTime}\t ${uuid()}\t${message}\n`
 
-const EventEmitter = require('events');
+    console.log(logItem);
+    // testing
+    try{
+        // we wait once we get those datas then we append it to a folder and file if it does not exist 
+        if (!fs.existsSync(path.join(__dirname, 'logs'))){
+            await fsPromises.mkdir(path.join(__dirname, 'logs'));
+        }
+    
+        await fsPromises.appendFile(path.join(__dirname, 'logs','eventLog.txt'),logItem);
 
-class Emitter extends EventEmitter{};
+    }catch (err){
+        console.error(err);
 
-const myEmitter = new Emitter();
- const PORT = process.env.PORT || 3500 ;
+    }
+}
+module.exports = logEvents;
 
- const server = http.createServer((req, res) => {
-      console.log(req.url, req.method)
-      const extention = path.extname(req.url);
-
-      let contentType;
-      switch (extention) {
-           
-           case '.css':
-                contentType = 'text/css';
-                break;
-           case '.js':
-                contentType = 'text/javascript';
-                break;
-           case '.json':
-                contentType = 'application/json';
-                break;
-           case '.jpg':
-                contentType = 'image/jpeg';
-                break;
-           case '.png':
-                contentType = 'image/png';
-                break;
-           case '.txt':
-                contentType = 'text/plain';
-                break;
-           default:
-                contentType = 'text/html';
-      }
-     let filePath = contentType === 'text/html' && req.url === '/' 
-          ? path.join(__dirname,'views', 'index.html')
-          : contentType === 'text/html' && req.url.slice(-1) === '/'
-               ? path.join(__dirname, 'views', req.url, 'index.html')
-               : contentType === 'text/html'
-                    ?path.join(__dirname, 'views',req.url)
-                    :path.join(__dirname, req.url);
-      // makes .html not required in the path
-
-     if(!extention && req.url.slice(-1) !== '/') filePath += '.html';
-
-     const fileExits = fs.existsSync(filePath)
-
-     if (fileExits){
-          // serve the file
-     } else {
-          // 404
-          // 301 redirect
-          console.log(path.parse(filePath))
-
-     }
- });
-
-server.listen(PORT, () => console.log(`Server runing on port ${PORT}`))
