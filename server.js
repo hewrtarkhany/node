@@ -6,7 +6,7 @@ const fsPromises = require('fs').promises
 
 
 
-const logEvents = require ('./logEevents');
+const logEvents = require ('./logEvents');
 
 const EventEmitter = require('events');
 
